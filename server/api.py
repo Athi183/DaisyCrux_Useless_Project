@@ -10,23 +10,37 @@ CORS(app)
 def encode_image_to_base64(image):
     _, buffer = cv2.imencode('.png', image)
     return base64.b64encode(buffer).decode('utf-8')
-def detect_burns(img):
+def detect_burns(img, mask):
+    # Convert to grayscale and invert
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     inverted = 255 - gray
-    _, burn_mask = cv2.threshold(inverted, 200, 255, cv2.THRESH_BINARY)
 
-    # Clean up mask
+    # Apply the chapati mask to remove background
+    masked_inverted = cv2.bitwise_and(inverted, inverted, mask=mask)
+
+    # Threshold to detect dark regions
+    _, burn_mask = cv2.threshold(masked_inverted, 200, 255, cv2.THRESH_BINARY)
+
+    # Clean small noise
     kernel = np.ones((3, 3), np.uint8)
     burn_mask = cv2.morphologyEx(burn_mask, cv2.MORPH_OPEN, kernel, iterations=2)
     burn_mask = cv2.dilate(burn_mask, kernel, iterations=1)
 
-    burn_count = cv2.countNonZero(burn_mask)
+    # Find contours on clean burn mask
+    contours, _ = cv2.findContours(burn_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Create a red mask
     burn_overlay = img.copy()
-    burn_overlay[burn_mask == 255] = [0, 0, 255]  # Red where burned
+    burn_count = 0
+
+    for cnt in contours:
+        area = cv2.contourArea(cnt)
+        if area > 50:
+            burn_count += 1
+            cv2.drawContours(burn_overlay, [cnt], -1, (0, 0, 255), -1)  # red fill
 
     return burn_overlay, burn_count
+
+
 def analyze_roti(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -35,6 +49,7 @@ def analyze_roti(img):
 
     roundness = 0
     contour_image = img.copy()
+    mask = np.zeros_like(gray)
 
     if contours:
         c = max(contours, key=cv2.contourArea)
@@ -43,9 +58,10 @@ def analyze_roti(img):
         if perimeter != 0:
             roundness = (4 * np.pi * area) / (perimeter ** 2)
         cv2.drawContours(contour_image, [c], -1, (0, 255, 0), 2)
+        cv2.drawContours(mask, [c], -1, 255, -1)  # Create roti mask
 
-    # 🔥 Use improved burn detection
-    burn_image, burn_count = detect_burns(img)
+    # 🧠 Burn detection with mask
+    burn_image, burn_count = detect_burns(img, mask)
 
     return {
         'roundness': round(roundness, 2),
@@ -53,7 +69,6 @@ def analyze_roti(img):
         'contour_image': encode_image_to_base64(contour_image),
         'burn_image': encode_image_to_base64(burn_image)
     }
-
 
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
