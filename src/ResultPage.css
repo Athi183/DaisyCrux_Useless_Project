@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #fef3c7; /* Match results-container bg */
+}
+
+.results-container {
+  background-color: #fef3c7; /* warm dough-like yellow */
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Georgia', serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #5c4033; /* rustic brown */
+}
+
+.wabi-title {
+  font-size: 3rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: #6b4226;
+  text-align: center;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.image-box {
+  flex: 1;
+  text-align: center;
+}
+
+.chapati-image {
+  width: 300px;
+  max-width: 90vw;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.info-box {
+  flex: 1;
+  text-align: left;
+}
+
+.label {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #a0522d; /* deep warm brown */
+  margin-bottom: 20px;
+}
+
+.comment {
+  font-size: 1.2rem;
+  font-family: 'Comic Sans MS', cursive;
+  color: #704214;
+  background-color: #fff9e6;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(255, 214, 107, 0.4);
+}
