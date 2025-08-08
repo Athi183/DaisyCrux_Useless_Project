@@ -1,43 +1,36 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 
-const chapatiUrl = "/assets/chapathi.jpg";
+const chefUrl = '/assets/chef.gif';
+
+function LoadingDots() {
+  const [dots, setDots] = React.useState('');
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length < 3 ? prev + '.' : ''));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return <>Loading{dots}</>;
+}
 
 export default function App() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const containerStyle = {
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: '#FFF8DC',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    position: 'relative',
-    fontFamily: 'Arial, sans-serif',
-    flexDirection: 'column',
-  };
+  const chefX = useMotionValue(-150);
+  const backgroundColor = useTransform(
+    chefX,
+    [-150, window.innerWidth],
+    ['#000000', '#fff8dc']
+  );
 
-  const titleStyle = {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    color: '#5D3A00',
-    marginBottom: '1rem',
-    zIndex: 10,
-  };
-
-  const buttonStyle = {
-    padding: '12px 24px',
-    fontSize: '1rem',
-    backgroundColor: '#5D3A00',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '12px',
-    cursor: 'pointer',
-    zIndex: 10,
+  // Only update chefX, no particles
+  const handleChefUpdate = (latest) => {
+    chefX.set(latest.x);
   };
 
   const handleFileChange = async (event) => {
@@ -55,84 +48,144 @@ export default function App() {
       });
 
       const data = await response.json();
-      console.log("Result from server:", data);
-
-      // ✅ Navigate to ResultPage with response data
       navigate('/result', { state: data });
-
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error('Upload failed:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={containerStyle}>
-      {/* Main Chapati Animation */}
+    <motion.div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        position: 'relative',
+        fontFamily: 'Comic Sans MS, cursive',
+        backgroundColor,
+      }}
+    >
+      {/* Animated Chef */}
       <motion.img
-        src={chapatiUrl}
-        alt="chapati"
-        initial={{ scale: 0, x: 0, y: 0 }}
-        animate={{ scale: 1, x: 200 }}
-        transition={{ duration: 1 }}
+        src={chefUrl}
+        alt="chef"
         style={{
-          width: 100,
-          height: 100,
+          width: 360,
           position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          bottom: 50,
+          left: 0,
+          zIndex: 10,
         }}
+        initial={{ x: -150 }}
+        animate={{ x: window.innerWidth }}
+        transition={{ duration: 10, ease: 'linear' }}
+        onUpdate={handleChefUpdate}
       />
 
-      {/* Title */}
+      {/* Main Title */}
       <motion.h1
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1, duration: 0.8 }}
-        style={titleStyle}
+        style={{
+          fontSize: '3rem',
+          fontWeight: 'bold',
+          color: '#222222',
+          zIndex: 10,
+          textAlign: 'center',
+          marginTop: '2rem',
+        }}
       >
-        ChapatiGPT-XS
+        Wabi Roti
       </motion.h1>
 
       {/* Upload Button */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8 }}
+        transition={{ delay: 1.5 }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '2rem',
+          zIndex: 10,
+        }}
       >
-        <label style={buttonStyle}>
-          {loading ? "Analyzing..." : "Upload Your Roti"}
+        <label
+          style={{
+            padding: '12px 24px',
+            fontSize: '1rem',
+            backgroundColor: '#5D3A00',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+          }}
+        >
+          {loading ? <LoadingDots /> : 'Upload Your Roti'}
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             style={{ display: 'none' }}
+            disabled={loading}
           />
         </label>
       </motion.div>
 
-      {/* Falling Chapatis */}
-      {[0, 1, 2].map((i) => (
-        <motion.img
-          key={i}
-          src={chapatiUrl}
-          alt={`chapati-stack-${i}`}
-          initial={{ y: -200, opacity: 0 }}
-          animate={{ y: i * 10, opacity: 1 }}
-          transition={{ delay: 2 + i * 0.5, duration: 0.5 }}
+      {/* Subtitle */}
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.2, duration: 1 }}
+        style={{
+          marginTop: '2rem',
+          textAlign: 'center',
+          fontSize: '2.5rem',
+          color: '#1a1a1a',
+        }}
+      >
+        Welcome to Wabi roti 🍽️
+      </motion.h1>
+
+      {/* Description */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3, duration: 1 }}
+        style={{
+          marginTop: '1rem',
+          textAlign: 'center',
+          color: '#444',
+          fontSize: '1.3rem',
+          fontStyle: 'italic',
+        }}
+      >
+        The secret ingredient is just a prompt away.
+      </motion.p>
+
+      {/* Loading Text */}
+      {loading && (
+        <motion.div
           style={{
-            width: 100,
-            height: 100,
             position: 'absolute',
-            top: '50%',
-            left: 'calc(50% + 200px)',
-            transform: 'translate(-50%, -50%)',
-            zIndex: i,
+            bottom: 140,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            color: '#5D3A00',
+            fontFamily: 'Comic Sans MS, cursive',
+            zIndex: 20,
+            userSelect: 'none',
           }}
-        />
-      ))}
-    </div>
+        >
+          <LoadingDots />
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
