@@ -1,31 +1,36 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 
-const chefUrl = '/assets/chef.gif'; // Chef image
-const wheatParticleUrl = '/assets/wheat.png'; // Wheat icon
-const flourParticleUrl = '/assets/flour.png'; // Flour icon
+const chefUrl = '/assets/chef.gif';
+
+function LoadingDots() {
+  const [dots, setDots] = React.useState('');
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length < 3 ? prev + '.' : ''));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return <>Loading{dots}</>;
+}
 
 export default function App() {
-  const [particles, setParticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const chefX = useMotionValue(-150);
+  const backgroundColor = useTransform(
+    chefX,
+    [-150, window.innerWidth],
+    ['#000000', '#fff8dc']
+  );
+
+  // Only update chefX, no particles
   const handleChefUpdate = (latest) => {
-    const newParticle = {
-      id: Date.now() + Math.random(),
-      x: latest.x + 60,
-      y: window.innerHeight - 120,
-      dx: (Math.random() - 0.5) * 100,
-      dy: -Math.random() * 80 - 40,
-      type: Math.random() < 0.5 ? 'wheat' : 'flour',
-    };
-
-    setParticles((prev) => [...prev, newParticle]);
-
-    setTimeout(() => {
-      setParticles((current) => current.filter((p) => p.id !== newParticle.id));
-    }, 2200);
+    chefX.set(latest.x);
   };
 
   const handleFileChange = async (event) => {
@@ -43,32 +48,31 @@ export default function App() {
       });
 
       const data = await response.json();
-      console.log("Result from server:", data);
       navigate('/result', { state: data });
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error('Upload failed:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
+    <motion.div
       style={{
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'black',
         overflow: 'hidden',
         position: 'relative',
         fontFamily: 'Comic Sans MS, cursive',
+        backgroundColor,
       }}
     >
-      {/* Chef walking */}
+      {/* Animated Chef */}
       <motion.img
         src={chefUrl}
         alt="chef"
         style={{
-          width:  180,
+          width: 360,
           position: 'absolute',
           bottom: 50,
           left: 0,
@@ -80,30 +84,7 @@ export default function App() {
         onUpdate={handleChefUpdate}
       />
 
-      {/* Sprinkle particles */}
-      {particles.map((p) => (
-        <motion.img
-          key={p.id}
-          src={p.type === 'wheat' ? wheatParticleUrl : flourParticleUrl}
-          initial={{ x: p.x, y: p.y, opacity: 1, scale: 1 }}
-          animate={{
-            x: p.x + p.dx,
-            y: p.y + p.dy + 100,
-            opacity: 0,
-            scale: 0.5,
-            rotate: Math.random() * 180,
-          }}
-          transition={{ duration: 2.2, ease: 'easeOut' }}
-          style={{
-            position: 'absolute',
-            width: 15,
-            height: 15,
-            pointerEvents: 'none',
-          }}
-        />
-      ))}
-
-      {/* Title */}
+      {/* Main Title */}
       <motion.h1
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -111,10 +92,10 @@ export default function App() {
         style={{
           fontSize: '3rem',
           fontWeight: 'bold',
-          color: '#ffbb00ff',
-          marginBottom: '1rem',
+          color: '#222222',
           zIndex: 10,
           textAlign: 'center',
+          marginTop: '2rem',
         }}
       >
         Wabi Roti
@@ -124,69 +105,87 @@ export default function App() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8 }}
-        style={{ position: 'absolute',
-  top: '65%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  zIndex: 10,
- }}
+        transition={{ delay: 1.5 }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '2rem',
+          zIndex: 10,
+        }}
       >
         <label
           style={{
             padding: '12px 24px',
             fontSize: '1rem',
             backgroundColor: '#5D3A00',
-            color: '#fff',
+            color: '#ffffff',
             border: 'none',
             borderRadius: '12px',
             cursor: 'pointer',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
           }}
         >
-          {loading ? "Analyzing..." : "Upload Your Roti"}
+          {loading ? <LoadingDots /> : 'Upload Your Roti'}
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             style={{ display: 'none' }}
+            disabled={loading}
           />
         </label>
       </motion.div>
 
-      {/* Main Title */}
+      {/* Subtitle */}
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
+        transition={{ delay: 2.2, duration: 1 }}
         style={{
-          position: 'absolute',
-          top: '40%',
-          width: '100%',
+          marginTop: '2rem',
           textAlign: 'center',
-          fontSize: '3rem',
-          color: '#FFD700',
+          fontSize: '2.5rem',
+          color: '#1a1a1a',
         }}
       >
         Welcome to Wabi roti 🍽️
       </motion.h1>
 
-      {/* Subtitle */}
+      {/* Description */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 3, duration: 1 }}
         style={{
-          position: 'absolute',
-          top: '55%',
-          width: '100%',
+          marginTop: '1rem',
           textAlign: 'center',
-          color: '#ccc',
+          color: '#444',
           fontSize: '1.3rem',
           fontStyle: 'italic',
         }}
       >
         The secret ingredient is just a prompt away.
       </motion.p>
-    </div>
+
+      {/* Loading Text */}
+      {loading && (
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: 140,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            color: '#5D3A00',
+            fontFamily: 'Comic Sans MS, cursive',
+            zIndex: 20,
+            userSelect: 'none',
+          }}
+        >
+          <LoadingDots />
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
