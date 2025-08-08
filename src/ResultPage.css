@@ -17,11 +17,15 @@
 }
 
 .content-wrapper {
+
   display: grid;
   grid-template-columns: 1fr 1fr; /* two columns */
   gap: 2rem;
   justify-content: center;
   align-items: start;
+
+  
+
   background: #ffffffcc;
   border-radius: 20px;
   padding: 2rem;
@@ -49,7 +53,11 @@
 }
 
 .image-box img {
+
   max-width: 100%;
+
+  max-width: 250px;
+
   border-radius: 12px;
   margin-top: 0.5rem;
   border: 2px solid #ffd699;
@@ -60,6 +68,8 @@
   border-radius: 15px;
   padding: 1.5rem 2rem;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+  min-width: 220px;
+
 }
 
 .label {
@@ -103,7 +113,9 @@
 
 @media (max-width: 768px) {
   .content-wrapper {
-    grid-template-columns: 1fr; /* single column on small screens */
+
+    flex-direction: column;
+    align-items: center;
   }
 
   .image-box img {
