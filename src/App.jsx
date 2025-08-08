@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const chapatiUrl = "/assets/chapathi.jpg";
 
 export default function App() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
   const containerStyle = {
     width: '100vw',
@@ -49,14 +50,16 @@ export default function App() {
 
     try {
       const response = await fetch('http://127.0.0.1:5000/analyze', {
-
         method: 'POST',
         body: formData,
       });
 
       const data = await response.json();
-      setResult(data);
       console.log("Result from server:", data);
+
+      // ✅ Navigate to ResultPage with response data
+      navigate('/result', { state: data });
+
     } catch (error) {
       console.error("Upload failed:", error);
     } finally {
@@ -130,23 +133,6 @@ export default function App() {
           }}
         />
       ))}
-
-      {/* Show Result (optional) */}
-      {result && (
-        <div style={{
-          position: 'absolute',
-          bottom: '5%',
-          backgroundColor: '#fff',
-          padding: '1rem 2rem',
-          borderRadius: '12px',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
-          textAlign: 'center',
-          fontSize: '1rem',
-        }}>
-          <p>🍪 Roundness: {result.roundness}</p>
-          <p>🔥 Burnt Spots: {result.burn_count}</p>
-        </div>
-      )}
     </div>
   );
 }
