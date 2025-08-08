@@ -1,78 +1,113 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap');
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-color: #fef3c7; /* Match results-container bg */
-}
-
 .results-container {
-  background-color: #fef3c7; /* warm dough-like yellow */
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #fff7e6, #ffe4b5);
   min-height: 100vh;
-  padding: 40px 20px;
-  font-family: 'Georgia', serif;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #5c4033; /* rustic brown */
 }
 
 .wabi-title {
-  font-size: 3rem;
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  margin-bottom: 40px;
-  color: #6b4226;
-  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #d17b00;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 .content-wrapper {
   display: flex;
+  gap: 2rem;
   flex-wrap: wrap;
-  gap: 40px;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 900px;
+  background: #ffffffcc;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .image-box {
-  flex: 1;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.chapati-image {
-  width: 300px;
-  max-width: 90vw;
+.image-box div {
+  background: #fffaf3;
+  border-radius: 15px;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+}
+
+.image-box h3 {
+  color: #c06000;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.image-box img {
+  max-width: 250px;
   border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+  border: 2px solid #ffd699;
 }
 
 .info-box {
-  flex: 1;
-  text-align: left;
+  background: #fff7e0;
+  border-radius: 15px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+  min-width: 220px;
 }
 
 .label {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  color: #a64b00;
 }
 
 .value {
-  font-size: 2.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
-  color: #a0522d; /* deep warm brown */
-  margin-bottom: 20px;
+  color: #d17b00;
+  margin-bottom: 1rem;
 }
 
 .comment {
-  font-size: 1.2rem;
-  font-family: 'Comic Sans MS', cursive;
-  color: #704214;
-  background-color: #fff9e6;
-  padding: 16px;
-  border-radius: 10px;
-  box-shadow: inset 0 0 10px rgba(255, 214, 107, 0.4);
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #6b4f2c;
+}
+
+.back-button {
+  background: linear-gradient(90deg, #ffb84d, #ff9933);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem;
+  margin-top: 2rem;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+.back-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #ffa31a, #ff6600);
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image-box img {
+    max-width: 90%;
+  }
 }
