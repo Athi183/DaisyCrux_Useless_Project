@@ -91,7 +91,7 @@ export default function App() {
           color: '#FFD700',
         }}
       >
-        Welcome to ChapatiGPT-XS 🍽️
+        Welcome to Wabi roti 🍽️
       </motion.h1>
 
       {/* Subtitle */}
