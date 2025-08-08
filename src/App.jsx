@@ -1,80 +1,116 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const chapatiUrl = "/assets/chapathi.jpg";
+const chefUrl = '/assets/chef.gif'; // Chef image
+const wheatParticleUrl = '/assets/wheat.png'; // Wheat icon
+const flourParticleUrl = '/assets/flour.png'; // Flour icon (new)
 
 export default function App() {
-  const containerStyle = {
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: '#FFF8DC',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    position: 'relative',
-    fontFamily: 'Arial, sans-serif',
-  };
+  const [particles, setParticles] = useState([]);
 
-  const titleStyle = {
-    position: 'absolute',
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    color: '#5D3A00',
-    top: '50%',
-    left: '20%',
-    transform: 'translateY(-50%)',
+  const handleChefUpdate = (latest) => {
+    const newParticle = {
+      id: Date.now() + Math.random(),
+      x: latest.x + 60,
+      y: window.innerHeight - 120,
+      dx: (Math.random() - 0.5) * 100,   // Horizontal spread
+      dy: -Math.random() * 80 - 40,     // Upward float
+      type: Math.random() < 0.5 ? 'wheat' : 'flour',
+    };
+
+    setParticles((prev) => [...prev, newParticle]);
+
+    // Remove after animation ends
+    setTimeout(() => {
+      setParticles((current) => current.filter((p) => p.id !== newParticle.id));
+    }, 2200);
   };
 
   return (
-    <div style={containerStyle}>
-      {/* Main Chapati Animation */}
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'black',
+        overflow: 'hidden',
+        position: 'relative',
+        fontFamily: 'Comic Sans MS, cursive',
+      }}
+    >
+      {/* Chef walking */}
       <motion.img
-        src={chapatiUrl}
-        alt="chapati"
-        initial={{ scale: 0, x: 0, y: 0 }}
-        animate={{ scale: 1, x: 200 }}
-        transition={{ duration: 1 }}
+        src={chefUrl}
+        alt="chef"
         style={{
-          width: 100,
-          height: 100,
+          width: 120,
           position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          bottom: 60,
+          left: 0,
+          zIndex: 10,
         }}
+        initial={{ x: -150 }}
+        animate={{ x: window.innerWidth  }}
+        transition={{ duration: 10, ease: 'linear' }}
+        onUpdate={handleChefUpdate}
       />
 
-      {/* Title Animation */}
-      <motion.h1
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        style={titleStyle}
-      >
-        ChapatiGPT-XS
-      </motion.h1>
-
-      {/* Falling Chapatis */}
-      {[0, 1, 2].map((i) => (
+      {/* Sprinkle particles */}
+      {particles.map((p) => (
         <motion.img
-          key={i}
-          src={chapatiUrl}
-          alt={`chapati-stack-${i}`}
-          initial={{ y: -200, opacity: 0 }}
-          animate={{ y: i * 10, opacity: 1 }}
-          transition={{ delay: 2 + i * 0.5, duration: 0.5 }}
+          key={p.id}
+          src={p.type === 'wheat' ? wheatParticleUrl : flourParticleUrl}
+          initial={{ x: p.x, y: p.y, opacity: 1, scale: 1 }}
+          animate={{
+            x: p.x + p.dx,
+            y: p.y + p.dy + 100,
+            opacity: 0,
+            scale: 0.5,
+            rotate: Math.random() * 180,
+          }}
+          transition={{ duration: 2.2, ease: 'easeOut' }}
           style={{
-            width: 100,
-            height: 100,
             position: 'absolute',
-            top: '50%',
-            left: 'calc(50% + 200px)',
-            transform: 'translate(-50%, -50%)',
-            zIndex: i,
+            width: 15,
+            height: 15,
+            pointerEvents: 'none',
           }}
         />
       ))}
+
+      {/* Main Title */}
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.5, duration: 1 }}
+        style={{
+          position: 'absolute',
+          top: '40%',
+          width: '100%',
+          textAlign: 'center',
+          fontSize: '3rem',
+          color: '#FFD700',
+        }}
+      >
+        Welcome to ChapatiGPT-XS 🍽️
+      </motion.h1>
+
+      {/* Subtitle */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3, duration: 1 }}
+        style={{
+          position: 'absolute',
+          top: '55%',
+          width: '100%',
+          textAlign: 'center',
+          color: '#ccc',
+          fontSize: '1.3rem',
+          fontStyle: 'italic',
+        }}
+      >
+        The secret ingredient is just a prompt away.
+      </motion.p>
     </div>
   );
 }
