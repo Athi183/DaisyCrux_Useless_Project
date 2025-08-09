@@ -83,8 +83,8 @@ Additional Demos
 
 Team Contributions
 Anna T Jeby: Frontend, animation, UI/UX
-[Athirs : Backend, image analysis
-[Name 3]: Documentation, testing
+[Athira V] : Backend, image analysis
+[Anna,Athira]: Documentation, testing
 Made with ❤️ at TinkerHub Useless Projects
 
 <img alt="Static Badge" src="https://img.shields.io/badge/TinkerHub-24?color=%23000000&amp;link=https://www.tinkerhub.org/">
