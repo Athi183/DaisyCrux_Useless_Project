@@ -11,36 +11,57 @@ export default function ResultPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const nodeAPI = import.meta.env.VITE_NODE_API;
+
   useEffect(() => {
     if (data) {
       const getGeminiComment = async () => {
         setIsLoading(true);
         setError(null);
-        try {
-          const response = await fetch('http://localhost:5001/api/get-malayalam-comment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              roundness: data.roundness,
-              burn_count: data.burn_count,
-            }),
-          });
 
-          if (!response.ok) throw new Error('Network response was not ok');
+        let attempts = 0;
+        const maxAttempts = 3;
 
-          const result = await response.json();
-          setMalayalamComment(result.comment);
-        } catch (err) {
-          console.error("Failed to fetch comment:", err);
-          setError('ക്ഷമിക്കണം, ഒരു തമാശ കണ്ടുപിടിക്കാൻ പറ്റിയില്ല!');
-        } finally {
-          setIsLoading(false);
+        while (attempts < maxAttempts) {
+          try {
+            const response = await fetch(`${nodeAPI}/api/get-malayalam-comment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                roundness: data.roundness,
+                burn_count: data.burn_count,
+              }),
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+              throw new Error("Invalid JSON response (HTML received)");
+            }
+
+            const result = await response.json();
+            setMalayalamComment(result.comment);
+            return; // success → exit loop
+
+          } catch (err) {
+            attempts++;
+            console.warn(`Attempt ${attempts} failed:`, err);
+
+            if (attempts < maxAttempts) {
+              await new Promise(res => setTimeout(res, 1500)); // wait before retry
+            } else {
+              setError('ക്ഷമിക്കണം, ഒരു തമാശ കണ്ടുപിടിക്കാൻ പറ്റിയില്ല!');
+            }
+          }
         }
+
+        setIsLoading(false);
       };
 
       getGeminiComment();
     }
-  }, [data]);
+  }, [data, nodeAPI]);
 
   if (!data) {
     return (
