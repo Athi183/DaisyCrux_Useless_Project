@@ -4,7 +4,10 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://wabi-roti.onrender.com"
+}));
+
 app.use(express.json());
 
 // ✅ Gemini API initialization
@@ -87,7 +90,8 @@ IMPORTANT: മറുപടി മലയാളത്തിൽ മാത്രമ�
   }
 });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
+
 // Listen on all network interfaces (0.0.0.0)
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🟢 Node.js സെർവർ പ്രവർത്തിക്കുന്നു: http://:${PORT}`);
