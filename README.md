@@ -1,114 +1,91 @@
+Wabi Roti 🍪
+Basic Details
+Team Name: DaisyCruz
+Team Members
+Team Lead: Athira V. - [MITS,Varikoli]
+Member 2: [Anna T Jeby] - [MITS Varikoli]
+Project Description
+Wabi Roti is a playful React app that lets users upload a photo of their chapati/roti and analyzes its roundness and burn marks using a backend service. The app features a walking chef animation and fun feedback on your roti's perfection.
 
-# React + Vite
+The Problem (that doesn't exist)
+How do you know if your chapati is truly round and not secretly a potato? The world needs a way to judge rotis for their wabi-sabi beauty.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Solution (that nobody asked for)
+Upload your roti, and let our AI chef analyze its roundness and burns. Get instant feedback and celebrate your perfectly imperfect chapati!
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-<img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
-
-
-# [Project Name] 🎯
-
-
-## Basic Details
-### Team Name: [Name]
-
-
-### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
-
-### Project Description
-[2-3 lines about what your project does]
-
-### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
-
-### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
-
-## Technical Details
-### Technologies/Components Used
-For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
-
-For Hardware:
-- [List main components]
-- [List specifications]
-- [List tools required]
-
-### Implementation
-For Software:
-# Installation
-[commands]
-
-# Run
-[commands]
-
-### Project Documentation
+Technical Details
+Technologies/Components Used
 For Software:
 
-# Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
-
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
-
+Languages: JavaScript
+Frameworks: React, Vite
+Libraries: framer-motion, react-router-dom
+Tools: ESLint
 For Hardware:
 
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
+None required (unless you want to build a chapati robot!)
+Implementation
+For Software:
 
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
+Installation
+# Frontend
+git clone https://github.com/DaisyCruz/WabiRoti.git
+cd WabiRoti/frontend
+npm install
+npm run dev
 
-# Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
+# Backend
+cd ../backend
+pip install -r requirements.txt
+python app.py
+Run
+- Frontend runs on localhost:5173
+- Backend runs on localhost:5000
+- Upload a chapati image → backend analyzes → frontend displays feedback
 
-![Build](Add photos of build process here)
-*Explain the build steps*
+Project Documentation
+- Frontend:
+- Component structure: UploadPage, ResultPage, ChefAnimation
+- Routing via react-router-dom
+- Animation logic using framer-motion
+- Backend:
+- Flask API with /upload endpoint
+- Image analysis pipeline using OpenCV
+- Roundness detection via contour approximation
+- Burn detection via pixel intensity thresholding
+- Feedback Logic:
+- Based on roundness score and burn percentage
+- Generates quirky comments like “Almost a pizza!” or “Michelangelo would be proud!”
 
-![Final](Add photo of final product here)
-*Explain the final build*
+Screenshots
+!Screenshot1<img width="1920" height="1080" alt="Screenshot 2025-08-09 054607" src="https://github.com/user-attachments/assets/d05147f2-b700-42cf-88dc-bbccb2b4f3f0" />
+<img width="1846" height="929" alt="unnamed" src="https://github.com/user-attachments/assets/3aecf57b-6345-457a-9c3d-4a2de96e263d" />
 
-### Project Demo
-# Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
+ Chef animation and upload interface
 
-# Additional Demos
+!Screenshot2 Sample chapati image used for analysis
+
+![chap](https://github.com/user-attachments/assets/228857d7-50ec-4268-9897-379bd55646fc)
+
+!Screenshot3 Animated chef walking across the screen
+<img width="1920" height="1080" alt="Screenshot 2025-08-09 054607" src="https://github.com/user-attachments/assets/a64533c8-e2ea-4d8a-a0b5-689d08be93dd" />
+
+Diagrams
+![Workflow](Add your workflow/architecture diagram here) Frontend (React) → Backend (Flask API) → Image Analysis → Results Page
+
+Project Demo
+Video
+[Add your demo video link here] Shows chef animation, upload, and result feedback
+
+Additional Demos
 [Add any extra demo materials/links]
+![Uploading chap.jpg…]()
 
-## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+Team Contributions
+Anna T Jeby: Frontend, animation, UI/UX
+[Athirs : Backend, image analysis
+[Name 3]: Documentation, testing
+Made with ❤️ at TinkerHub Useless Projects
 
----
-Made with ❤️ at TinkerHub Useless Projects 
-
-![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)
-![Static Badge](https://img.shields.io/badge/UselessProjects--25-25?link=https%3A%2F%2Fwww.tinkerhub.org%2Fevents%2FQ2Q1TQKX6Q%2FUseless%2520Projects)
-
+<img alt="Static Badge" src="https://img.shields.io/badge/TinkerHub-24?color=%23000000&amp;link=https://www.tinkerhub.org/">
+<img alt="Static Badge" src="https://img.shields.io/badge/UselessProjects--25-25?link=https://www.tinkerhub.org/events/Q2Q1TQKX6Q/Useless%20Projects">
