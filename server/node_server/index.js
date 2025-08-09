@@ -24,8 +24,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ Handle OPTIONS preflight for all routes
-app.options('*', cors());
 
 app.use(express.json());
 
