@@ -4,13 +4,30 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const app = express();
+
+// ✅ CORS Setup (must be before routes)
+const allowedOrigins = [
+  "https://wabi-roti.onrender.com",   // Render frontend
+  "https://wabi-roti.vercel.app"      // Vercel frontend
+];
+
 app.use(cors({
-  origin: [
-    "https://wabi-roti.onrender.com",   // Render frontend
-    "https://wabi-roti.vercel.app"      // Vercel frontend
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
+// ✅ Handle preflight requests for all routes
+app.options('*', cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
 // ✅ Gemini API initialization
@@ -32,7 +49,7 @@ const fallbackJokes = [
   "അടുപ്പിനൊപ്പം ആർട്ട് ക്ലാസ് പോയിട്ടുണ്ടോ?",
   "പൊള്ളൽ ഇങ്ങനെ വന്നാൽ അടുപ്പിനും PTSD ഉണ്ടാകും!",
   "വൃത്തം വരയ്ക്കാൻ സ്കെയിലും കോമ്പസും മറന്നോ?",
-  "ചപ്പാത്തിക്ക്‌ സ്വന്തമായി GPS വേണം, വഴികേടായി തോന്നുന്നു!",
+  "ചപ്പാത്തിക്ക്‌ സ്വന്തം GPS വേണം, വഴികേടായി തോന്നുന്നു!",
   "ഇത് ചപ്പാത്തിയോ, കറുത്ത ചന്ദ്രൻ്റെ സിമുലേഷൻ ആണോ?",
   "പൊള്ളലുകൾക്ക് ISO സർട്ടിഫിക്കറ്റ് കൊടുക്കാം!"
 ];
@@ -81,7 +98,6 @@ IMPORTANT: മറുപടി മലയാളത്തിൽ മാത്രമ�
       text = fallbackJokes[Math.floor(Math.random() * fallbackJokes.length)];
     }
 
-    // Ensure UTF-8 output
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.json({ comment: text });
 
@@ -94,8 +110,6 @@ IMPORTANT: മറുപടി മലയാളത്തിൽ മാത്രമ�
 });
 
 const PORT = process.env.PORT || 5001;
-
-// Listen on all network interfaces (0.0.0.0)
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🟢 Node.js സെർവർ പ്രവർത്തിക്കുന്നു: http://:${PORT}`);
+  console.log(`🟢 Node.js സെർവർ പ്രവർത്തിക്കുന്നു: http://0.0.0.0:${PORT}`);
 });
