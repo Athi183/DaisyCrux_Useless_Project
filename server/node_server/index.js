@@ -5,9 +5,12 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const app = express();
 app.use(cors({
-  origin: "https://wabi-roti.onrender.com"
+  origin: [
+    "https://wabi-roti.onrender.com",   // Render frontend
+    "https://wabi-roti.vercel.app"      // Vercel frontend
+  ],
+  credentials: true
 }));
-
 app.use(express.json());
 
 // ✅ Gemini API initialization
