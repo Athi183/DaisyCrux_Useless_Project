@@ -3,7 +3,7 @@ from flask_cors import CORS
 import cv2
 import numpy as np
 import base64
-
+from flask_cors import cross_origin
 app = Flask(__name__)
 CORS(app)
 
@@ -70,8 +70,13 @@ def analyze_roti(img):
         'burn_image': encode_image_to_base64(burn_image)
     }
 
-@app.route('/analyze', methods=['POST'])
+
+
+@app.route('/analyze', methods=['POST', 'OPTIONS'])
+@cross_origin(origins="*")
 def analyze_image():
+    if request.method == "OPTIONS":
+        return '', 200  # Handle preflight quickly
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
 
