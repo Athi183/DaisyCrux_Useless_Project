@@ -17,7 +17,7 @@ try {
   console.error("❌ Gemini മോഡൽ ഇൻഷിയലൈസ് ചെയ്യാൻ കഴിഞ്ഞില്ല:", error);
 }
 
-// ✅ Fallback Malayalam jokes
+// ✅ Fallback Malayalam jokes in case the API fails
 const fallbackJokes = [
   "ഇത് ചപ്പാത്തിയാണോ, പഴയ ഭൂമിയുടെ ചിത്രം ആണോ?",
   "പൊള്ളലുകൾ കണ്ടപ്പോൾ തോന്നി, അടുപ്പിന് നേരെ റോക്കറ്റ് ഇറങ്ങിയെന്നു!",
@@ -69,13 +69,13 @@ IMPORTANT: മറുപടി മലയാളത്തിൽ മാത്രമ�
     const response = await result.response;
     let text = (response.text() || "").trim();
 
-    // ✅ Fallback if Gemini gives empty or English text
+    // Fallback if Gemini gives empty or English text
     if (!text || /[a-zA-Z]/.test(text)) {
       console.warn("⚠️ Gemini English/Empty മറുപടി നൽകി. Fallback joke ഉപയോഗിക്കുന്നു.");
       text = fallbackJokes[Math.floor(Math.random() * fallbackJokes.length)];
     }
 
-    // ✅ Ensure UTF-8 output
+    // Ensure UTF-8 output
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.json({ comment: text });
 
@@ -88,4 +88,7 @@ IMPORTANT: മറുപടി മലയാളത്തിൽ മാത്രമ�
 });
 
 const PORT = 5001;
-app.listen(PORT, () => console.log(`🟢 Node.js സെർവർ പ്രവർത്തിക്കുന്നു: http://localhost:${PORT}`));
+// Listen on all network interfaces (0.0.0.0)
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🟢 Node.js സെർവർ പ്രവർത്തിക്കുന്നു: http://:${PORT}`);
+});

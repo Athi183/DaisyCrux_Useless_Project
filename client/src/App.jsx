@@ -32,29 +32,48 @@ export default function App() {
   const handleChefUpdate = (latest) => {
     chefX.set(latest.x);
   };
+  const flaskAPI = import.meta.env.VITE_FLASK_API;
+const nodeAPI = import.meta.env.VITE_NODE_API;
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('image', file);
+  setLoading(true);
+  const formData = new FormData();
+  formData.append('image', file);
 
-    try {
-      const response = await fetch('http://127.0.0.1:5000/analyze', {
-        method: 'POST',
-        body: formData,
-      });
+  try {
+    // 1️⃣ Call Flask backend for analysis
+    const analyzeResponse = await fetch(`${flaskAPI}/analyze`, {
+      method: "POST",
+      body: formData,
+    });
+    const analyzeData = await analyzeResponse.json();
 
-      const data = await response.json();
-      navigate('/result', { state: data });
-    } catch (error) {
-      console.error('Upload failed:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // 2️⃣ Call Node.js backend for Malayalam comment
+    const commentResponse = await fetch(`${nodeAPI}/api/get-malayalam-comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        roundness: analyzeData.roundness,
+        burn_count: analyzeData.burn_count
+      })
+    });
+    const commentData = await commentResponse.json();
+
+    // 3️⃣ Navigate to result page
+    navigate('/result', { 
+      state: { ...analyzeData, malayalamComment: commentData.comment } 
+    });
+
+  } catch (error) {
+    console.error("Upload failed:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <motion.div
